@@ -1,6 +1,6 @@
 //cuando registremos en el formulario
 export type Patient = {
-  id:number
+  id:string
   name:string
   caretaker:string
   date:Date
