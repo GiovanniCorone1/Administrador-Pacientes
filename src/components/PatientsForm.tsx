@@ -3,17 +3,18 @@ import { Error } from "./Error"
 import { DraftPatient } from '../types/index';
 import { usePatientStore } from '../store';
 export const PatientsForm=()=> {
-  //register , handleSubmit y formState son funciones que se obtienen de useForm
+  //register , handleSubmit ,reset y formState son funciones que se obtienen de useForm
   /*
   register: Se encarga de registrar los campos del formulario y de validarlos.
   handleSubmit:Se encarga de manejar el evento onSubmit del formulario asegurando que los datos sean validados antes de ejecutar la función de envío.
   formState: Objeto que contiene el estado actual del formulario, como errores, si está enviando, si se modificó, etc.
+  Reset: Función que se encarga de limpiar los campos del formulario.
   */
  //realiza la desestructuracion anidada de los metodos que se obtienen de useForm
  //const errors = form.formState.errors; ====> const {formState :{errors}}=useForm()
  //errors tiene la estructura de un objeto que contiene los errores de los campos del formulario
  //cuando se genera y se registra un formulario es de tipo DraftPatient
-  const {register,handleSubmit , formState:{errors}}=useForm<DraftPatient>()
+  const {register,handleSubmit , formState:{errors} , reset}=useForm<DraftPatient>()
   //obtenemos la funcion addPatient del store , unimos el store con el componente , lo que renderiza (lista de pacientes) lo ponemos en otro componente y tambien lo tenemos con reestructuracion
   // const {addPatient} =usePatientStore()
   //otra forma de obtener la funcion addPatient del store , donde "state" puedo cambiarlo por cualquier nombre
@@ -21,6 +22,7 @@ export const PatientsForm=()=> {
   //funcion que se le pasa al handleSubmit como parametro ,siempre se usa como parametro en react-hook-form , funciona luego que todas las validaciones pasen
   const registerPatient=(data:DraftPatient)=>{
     addPatient(data)
+    reset()
   }
   return (   
     <div className="md:w-1/2 lg:w-2/5 mx-5">
