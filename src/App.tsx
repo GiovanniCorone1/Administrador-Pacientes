@@ -1,3 +1,4 @@
+import {ToastContainer} from 'react-toastify';
 import {PatientsForm}  from './components/PatientsForm';
 import { PatientsList } from './components/PatientsList';
 function App() {
@@ -11,6 +12,7 @@ function App() {
         <PatientsForm/>
         <PatientsList/>
       </div>
+      <ToastContainer/>
     </>
   )
 }
