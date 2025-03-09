@@ -1,8 +1,8 @@
 import {usePatientStore} from '../store'
 import { PatientsDetails } from './PatientsDetails';
 export const PatientsList = () => {
+  //obtenemos la lista de pacientes del store
   const patients = usePatientStore(state => state.patients)
-  console.log(patients)
   return (
     <section className='md:w-1/2 lg:3/5 md:h-screen overflow-y-auto'>
       { patients.length ?

@@ -2,6 +2,7 @@ import {useForm} from "react-hook-form"
 import { Error } from "./Error"
 import { DraftPatient } from '../types/index';
 import { usePatientStore } from '../store';
+import { useEffect } from "react";
 export const PatientsForm=()=> {
   //register , handleSubmit ,reset y formState son funciones que se obtienen de useForm
   /*
@@ -9,21 +10,41 @@ export const PatientsForm=()=> {
   handleSubmit:Se encarga de manejar el evento onSubmit del formulario asegurando que los datos sean validados antes de ejecutar la función de envío.
   formState: Objeto que contiene el estado actual del formulario, como errores, si está enviando, si se modificó, etc.
   Reset: Función que se encarga de limpiar los campos del formulario.
+  setValue: Función que se encarga de establecer el valor de un campo del formulario.
   */
  //realiza la desestructuracion anidada de los metodos que se obtienen de useForm
  //const errors = form.formState.errors; ====> const {formState :{errors}}=useForm()
  //errors tiene la estructura de un objeto que contiene los errores de los campos del formulario
  //cuando se genera y se registra un formulario es de tipo DraftPatient
-  const {register,handleSubmit , formState:{errors} , reset}=useForm<DraftPatient>()
+  const {register,handleSubmit , formState:{errors} , reset , setValue}=useForm<DraftPatient>()
   //obtenemos la funcion addPatient del store , unimos el store con el componente , lo que renderiza (lista de pacientes) lo ponemos en otro componente y tambien lo tenemos con reestructuracion
   // const {addPatient} =usePatientStore()
   //otra forma de obtener la funcion addPatient del store , donde "state" puedo cambiarlo por cualquier nombre
   const addPatient=usePatientStore(state=>state.addPatient)
+  //editId es el id del paciente que se va a editar y patients es la lista de pacientes actual
+  const editId=usePatientStore(state=>state.editId)
+  const patients=usePatientStore(state=>state.patients)
+  const updatePatient=usePatientStore(state=>state.updatePatient)
   //funcion que se le pasa al handleSubmit como parametro ,siempre se usa como parametro en react-hook-form , funciona luego que todas las validaciones pasen
   const registerPatient=(data:DraftPatient)=>{
-    addPatient(data)
+    if (editId){
+      updatePatient(data)
+    }else{
+      addPatient(data)
+    }
     reset()
   }
+  useEffect(()=>{
+    if(editId){
+      const patientById = patients.filter(patient=>patient.id===editId)[0]
+      //setValue es una funcion que se obtiene de useForm y se encarga de establecer el valor de un campo del formulario , en este caso se actualizara en funcion del editId que se obtiene del store
+      setValue("name",patientById.name)
+      setValue("caretaker",patientById.caretaker)
+      setValue("email",patientById.email)
+      setValue("date",patientById.date) 
+      setValue("symptoms",patientById.symptoms)
+    }
+  },[editId])
   return (   
     <div className="md:w-1/2 lg:w-2/5 mx-5">
       <h2 className="font-black text-3xl text-center">Seguimiento Pacientes</h2>
