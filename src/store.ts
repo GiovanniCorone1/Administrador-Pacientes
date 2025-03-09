@@ -1,8 +1,9 @@
 //donde ira el estado y las acciones
 import {create} from 'zustand'
-import {devtools} from 'zustand/middleware' //middleware para ver el estado en la consola
+import {devtools , persist} from 'zustand/middleware' //middleware para ver el estado en la consola y la persistencia de datos
 import { v4 as uuidv4 } from "uuid";
 import { Patient , DraftPatient} from './types'
+import { createJSONStorage } from 'zustand/middleware';
 //2.tipamos el hook "create"
 type PatientState = {
   //types de los valores de estado inicial
@@ -24,7 +25,7 @@ const createPatient = (patient:DraftPatient):Patient=>{
 }
 //1.creamos el store con el hook "create" y le pasamos un objeto con el estado inicial , usePatientStore es el custoomhook que se usara para acceder al estado y las acciones y el parametro "set" es una funcion que se encarga de actualizar el estado
 export const usePatientStore = create<PatientState>()(
-  devtools((set)=>({
+  devtools(persist((set)=>({
   //variable iniciales
   patients : [],
   editId:"",
@@ -54,4 +55,4 @@ export const usePatientStore = create<PatientState>()(
       editId:""
     }))
   }
-}) ))
+}),{ name :"patient-storage", storage :createJSONStorage(()=>sessionStorage)}) ))
